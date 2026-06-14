@@ -42,7 +42,7 @@ complete map:
 | `GP30` | `IRQB` | out | Aggregated maskable interrupt |
 | `GP31` | `NMIB` | out | Non-maskable interrupt (reserved; see below) |
 | `GP32` | `RTC_CE` | out | RTC chip-enable — bodged to the CPU `BE` line for boot preload |
-| `GP33` | `Y7_FB` | in | `74AHC138` `Y7` feedback (high-bank hint) |
+| `GP33` | `Y7_FB` | in | `74AHC138` `Y7` feedback — vestigial (decode uses the captured address); dropped in rev2.2 |
 | `GP34` | `CS_VID_SPI` | out | VID SPI slave-select (firmware-update path) |
 | `GP35` | `SD_CS` | out | SD card SPI chip-select |
 | `GP36` | `RUN_ALL` | out | Open-drain panic-reset for all three RP2354Bs |

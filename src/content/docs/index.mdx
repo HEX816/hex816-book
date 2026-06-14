@@ -43,7 +43,7 @@ This is real hardware, designed and assembled by a small group of retro enthusia
 Where a chip choice was a trade-off, the trade-off is described. Where a behaviour is a workaround for a bug in Rev&nbsp;2.1, that is described too — including which board revision is expected to fix it. There is no marketing in this book.
 
 :::note
-The HEX-816 is still in active hardware bring-up at the time this preface was written. Most of Part 1 reflects the design intent of Rev&nbsp;2.1 and the firmware as frozen at v2.1; a few sections will be updated against measurements once the first boards return from JLCPCB.
+The HEX-816 is still in active hardware bring-up at the time this preface was written. Most of Part 1 reflects the design intent of Rev&nbsp;2.1 hardware and the current firmware baseline; a few sections will be updated against measurements once the first boards return from JLCPCB.
 :::
 
 ## Conventions used in the book
@@ -54,7 +54,7 @@ Three typographic conventions to know about:
 - Hardware **chip names** and **language names** are bolded on first mention in each chapter.
 - Boxed callouts (like the one above) flag a quirk, a gotcha, or a forward reference to a later chapter.
 
-Memory addresses are written with a leading `$` in the 65xx tradition: `$0000`–`$FFFFFF` for the full 24-bit address space, `$E000`-style for bank-0 short addresses, and `$00:CF00` when the bank needs to be explicit.
+Memory addresses are written with a leading `$` in the 65xx tradition: `$0000`–`$FFFFFF` for the full 24-bit address space, `$CF00`-style for bank-0 short addresses, and `$00:CF00` when the bank needs to be explicit.
 
 ---
 
