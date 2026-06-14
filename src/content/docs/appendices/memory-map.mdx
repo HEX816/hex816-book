@@ -89,8 +89,8 @@ Offsets not listed here are unmapped: reads return `$FF` and writes are ignored.
 | $CF0A | `LED` | W | Status LED (currently a no-op; the board LED is on SND) |
 | $CF10–$CF11 | `UART_DATA/STATUS` | R/W | Console UART, relayed to SND CDC1 over USB |
 | $CF20 | `SD_CMD` | W | SD/FAT command dispatch (value ≥ `$10`) |
-| $CF25 | `SD_DATA` | R | SD 128-byte data stream (see caution below) |
-| $CF26 | `SD_STATUS` | R | SD status (see caution below) |
+| $CF25 | `SD_DATA` | R/W | SD 128-byte data stream (READ128 / WRITE128) |
+| $CF26 | `SD_STATUS` | R | SD status (busy / error / card-present) |
 | $CF28–$CF39 | `FAT_*` | R/W | FatFs register file (handle, path, position, attributes, size, name, date, sync, mount) |
 | $CF3A–$CF3B | `MSC_STATE/CTRL` | R/W | Removable-media (USB mass-storage) status and control |
 | $CF50–$CF57 | `RTC_*` | R/W | Real-time clock — seconds…year (BCD) and control |
@@ -118,13 +118,13 @@ The full protocol is in Chapter&nbsp;15.
 The I/O decode is still settling in a few places. These are real, current
 limitations — not rounding in this table:
 
-:::caution[I/O map — open issues]
-- **`$CF25` SD_DATA writes are dropped.** Reads (the SD `READ128` path) work, but
-  the firmware does not route writes to `$CF25` into the FAT handler, so the
-  `WRITE128` save path cannot deliver its bytes. SD file *save* does not work
-  until this is fixed in firmware.
-- **`$CF26` SD_STATUS is unimplemented.** The address decodes but has no handler,
-  so it always reads `$FF`.
+:::caution[I/O map — caveats]
+- **`$CF25` SD_DATA writes** — an earlier firmware dispatch gap dropped writes to
+  `$CF25` (READ128 worked; WRITE128 saves silently did nothing). **Fixed in the
+  current firmware** — `io_write` now routes `$CF25` to the FAT handler. Pending
+  on-hardware verification.
+- **`$CF26` SD_STATUS** — was unimplemented (read `$FF`); **now implemented in the
+  current firmware**, returning real SD/FAT status. Pending on-hardware verification.
 - **`$CFA0`–`$CFBF` SND window is narrow.** SYS forwards only this 32-byte window
   to SND, which covers SPI registers `$00`–`$1F` — narrower than the SND audio
   register range documented for the PSG/PCM mixer.

@@ -83,11 +83,12 @@ port at `$CF25`: after a read command, successive reads of `$CF25` stream the
 record out a byte at a time.
 
 :::caution
-The byte-streaming *write* path is not complete on the current firmware. The
-`READ128` direction works, but writes to `SD_DATA` (`$CF25`) are not routed to the
-filesystem handler, so `WRITE128` never receives its bytes — saving a file does
-not yet work. `SD_STATUS` (`$CF26`) is also unimplemented and reads `$FF`. Both
-are recorded as firmware decode issues in Appendix&nbsp;A.
+The SD byte-stream path had two firmware gaps, both now fixed (pending
+on-hardware verification): writes to `SD_DATA` (`$CF25`) were not routed to the
+filesystem handler — so `WRITE128`, saving a file, silently did nothing — and
+`SD_STATUS` (`$CF26`) was unimplemented and read `$FF`. The current firmware
+routes `$CF25` writes to the FAT handler and returns real `$CF26` status; see
+Appendix&nbsp;A.
 :::
 
 The card can additionally be presented to a host PC as USB mass storage; SYS

@@ -111,11 +111,11 @@ stream port at `$CF25`, the CP/M record size. Storage is covered in depth in
 Chapter&nbsp;3.
 
 :::caution
-On the current firmware, writes to `SD_DATA` (`$CF25`) are not routed to the
-filesystem handler, so the `WRITE128` save path does not deliver its bytes — SD
-*reads* work but *saves* do not yet. `SD_STATUS` (`$CF26`) is likewise
-unimplemented and reads `$FF`. Both are tracked as firmware decode issues
-(Appendix&nbsp;A).
+The SD byte-stream path had two firmware gaps, now fixed (pending on-hardware
+verification): writes to `SD_DATA` (`$CF25`) were dropped — so `WRITE128` saves
+silently failed — and `SD_STATUS` (`$CF26`) was unimplemented, reading `$FF`. The
+current firmware routes `$CF25` writes to the FAT handler and returns real
+`$CF26` status (Appendix&nbsp;A).
 :::
 
 ## Real-time clock
