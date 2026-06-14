@@ -67,6 +67,11 @@ The register-save area at `$0080`–`$008F` is reserved BIOS workspace; the BRK
 handler stores the user program's registers there for the debugger
 (Chapter&nbsp;15). The `$0080`–`$008F` range overlaps the zero page by design.
 
+The TPA, CCP, and BDOS boundaries are fixed by the HEX/OS BIOS linker scripts
+(`ccp816.ld` and `bdos816.ld`): the CCP and BDOS each occupy a 10 KB window
+(`$7F00`–`$A6FF` and `$A700`–`$CEFF`), with `bdos816.ld` asserting that BDOS ends
+below the `$CF00` I/O page. The I/O page and the 12 KB BIOS are fixed by the firmware.
+
 ## The $CF00 I/O page
 
 The I/O page is a single 256-byte region in bank&nbsp;0. SYS decodes the address
