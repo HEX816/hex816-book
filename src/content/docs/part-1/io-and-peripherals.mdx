@@ -140,21 +140,18 @@ and ping.
 
 ## Audio and video
 
-**SND** audio registers are written through the `$CFA0`–`$CFBF` window: SYS
-forwards each write to SND over SPI as a two-byte packet of `{offset, value}`.
-This drives the 16-voice PSG and the four-channel PCM mixer (Chapter&nbsp;5).
+**SND** registers are written through two forwarding windows: the **PSG** voices at
+`$CFA0`–`$CFDF` (all 16 voices, SPI regs `$00`–`$3F`) and the **PCM** indirect
+registers at `$CFE5`–`$CFEB` (SPI regs `$45`–`$4B`). SYS forwards each write to SND
+over SPI as a two-byte `{offset, value}` packet, driving the 16-voice PSG and the
+four-channel PCM mixer (Chapter&nbsp;5).
 
 **VID** receives the PRISM command stream through a single port, `PDI` at `$CFE0`
 — each write sends one byte to VID over the QSPI link (`GP37`–`GP41`). VID runs the
 command list on its own core and shifts HDMI out directly; there is no separate
-display controller to program (Chapters&nbsp;4 and&nbsp;11).
-
-:::caution
-The `$CFA0`–`$CFBF` window only reaches SPI registers `$00`–`$1F` on SND, which is
-narrower than the full audio register range, and the `PDI` port at `$CFE0`
-overlaps where the PCM sample-pool registers would extend. Neither has been
-reconciled yet (Appendix&nbsp;A).
-:::
+display controller to program (Chapters&nbsp;4 and&nbsp;11). `PDI` (`$CFE0`) sits
+just below the PCM window (`$CFE5`–`$CFEB`) and is decoded as an exact single-byte
+match, so the two do not overlap.
 
 ## Debug
 

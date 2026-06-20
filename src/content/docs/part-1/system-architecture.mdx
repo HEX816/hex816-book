@@ -22,7 +22,7 @@ On Rev 2.1 the CPU is currently running at **3.125 MHz** for bring-up purposes, 
 The 65C816 cannot, on its own, drive HDMI, host a USB stack, mix PCM audio in real time, or address 2 MB of SRAM through its multiplexed bus. Rather than building support chips out of CPLDs, the HEX-816 uses three RP2354B microcontrollers in QFN-80 packages. Each runs its own firmware. They are referred to throughout the book by short names:
 
 - **SYS** (U_SYS) — the bus master. Generates `PHI2` from a PIO state machine, samples the CPU bus, runs the chip-select decoder hooks, and hosts USB through the FE1.1S hub. SYS is the only chip that talks to the CPU directly.
-- **VID** (U_VID) — the **PRISM** video subsystem. Reads a PDI command stream from SYS over QSPI, runs the command list on its own Core&nbsp;1, and shifts TMDS bits directly out through the RP2350's `HSTX` peripheral. No HDMI bridge chip.
+- **VID** (U_VID) — the **PRISM** video subsystem. Reads a PDI command stream from SYS over QSPI, runs the command list on its own Core&nbsp;1, and shifts TMDS bits directly out through the RP2354B's `HSTX` peripheral. No HDMI bridge chip.
 - **SND** (U_SND) — sound. Drives a PCM5102A I²S DAC at 48 kHz, 16-bit, with 16 PSG voices and four PCM channels mixed in software. Also exposes the development console: two CDC ACM ports over USB, one for DAP debugging and one for the HEX/OS serial console.
 
 The three chips communicate through a small mesh of buses: shared SPI from SYS to VID and SND for control, a QSPI tap from SYS to VID for PRISM commands, an I²S link from SND to VID so HDMI audio works without extra wiring, and individual SWD ports on each for in-system programming. The full pinout lives in Chapter&nbsp;6.
@@ -90,8 +90,9 @@ The I/O page is a single 256-byte region in bank 0 mapped to SYS-side hardware r
 | $CF58–$CF67 | ESP32-C3 networking |
 | $CF70–$CF72 | BRK debug handshake |
 | $CF7F | Boot-staging flag |
-| $CFA0–$CFBF | SND register window (PSG voices, PCM channels) |
+| $CFA0–$CFDF | SND register window (16 PSG voices) |
 | $CFE0 | PDI stream port (to PRISM) |
+| $CFE5–$CFEB | SND PCM registers |
 
 A few registers in this page are still settling — notably the SD data/status
 path and the SND register window. The authoritative per-register breakdown is

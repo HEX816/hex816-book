@@ -97,8 +97,9 @@ Offsets not listed here are unmapped: reads return `$FF` and writes are ignored.
 | $CF58–$CF67 | `NET_*` | R/W | ESP32-C3 networking registers |
 | $CF70–$CF72 | `DBG_*` | R/W | BRK debug handshake (see below) |
 | $CF7F | `BOOT_STAGE_FLAG` | W | Write `$A5` to end boot-staging of the $F000–$FFFF mirror |
-| $CFA0–$CFBF | `SND_REGS` | W | SND register window, forwarded over SPI |
+| $CFA0–$CFDF | `SND_PSG` | W | 16 PSG voices → SND over SPI (regs $00–$3F) |
 | $CFE0 | `PDI` | W | PRISM Display Interface — one command byte to VID over QSPI |
+| $CFE5–$CFEB | `SND_PCM` | W | PCM indirect registers → SND over SPI (regs $45–$4B) |
 
 ### Debug handshake
 
@@ -125,12 +126,9 @@ limitations — not rounding in this table:
   on-hardware verification.
 - **`$CF26` SD_STATUS** — was unimplemented (read `$FF`); **now implemented in the
   current firmware**, returning real SD/FAT status. Pending on-hardware verification.
-- **`$CFA0`–`$CFBF` SND window is narrow.** SYS forwards only this 32-byte window
-  to SND, which covers SPI registers `$00`–`$1F` — narrower than the SND audio
-  register range documented for the PSG/PCM mixer.
-- **`$CFE0` PDI overlaps the SND high registers.** The PRISM command port at
-  `$CFE0` sits where the PCM sample-pool registers would extend; the two have not
-  been reconciled.
+- *(Resolved)* The SND forward window now covers all 16 PSG voices
+  (`$CFA0`–`$CFDF`) and a separate PCM block (`$CFE5`–`$CFEB`); `PDI` at `$CFE0` is
+  an exact-match single byte, so it no longer collides with the PCM registers.
 :::
 
 ## Interrupt and reset vectors
