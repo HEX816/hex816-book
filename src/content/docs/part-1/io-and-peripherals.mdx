@@ -59,8 +59,9 @@ complete map:
 `GP32` is the RTC chip-enable in the production design, but on Rev&nbsp;2.1 it is
 bodged to the CPU's `BE` (bus-enable) line so SYS can hold the CPU off the bus
 while it preloads the BIOS at boot. The RTC chip-enable is sacrificed for that
-window. Rev&nbsp;2.2 makes this permanent — `BE` gets `GP32` for good, and the RTC
-moves to the SND coprocessor (which frees `GP32`, `GP46`, and `GP47` on SYS).
+window. Rev&nbsp;2.2 makes this permanent — `BE` gets a dedicated pin (`GP33`, the
+freed `Y7_FB`), and the RTC moves to the SND coprocessor (which frees `GP32`,
+`GP46`, and `GP47` on SYS; `GP32` then carries `SND_IRQ`).
 :::
 
 ### Serving an I/O access
